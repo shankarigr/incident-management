@@ -1,5 +1,5 @@
 _schema-version: '1.0'
-repository: gopalanand230
+repository: shankarigr
 tag: latest
 before-all:
   - npx cds build --production
