@@ -1044,7 +1044,26 @@
         },
         "name": {
           "@Core.Computed": true,
-          "type": "cds.String"
+          "type": "cds.String",
+          "$calc": {
+            "xpr": [
+              {
+                "ref": [
+                  "firstName"
+                ]
+              },
+              "||",
+              {
+                "val": " "
+              },
+              "||",
+              {
+                "ref": [
+                  "lastName"
+                ]
+              }
+            ]
+          }
         },
         "email": {
           "type": "sap.capire.incidents.EMailAddress"
@@ -1180,7 +1199,26 @@
         },
         "name": {
           "@Core.Computed": true,
-          "type": "cds.String"
+          "type": "cds.String",
+          "$calc": {
+            "xpr": [
+              {
+                "ref": [
+                  "firstName"
+                ]
+              },
+              "||",
+              {
+                "val": " "
+              },
+              "||",
+              {
+                "ref": [
+                  "lastName"
+                ]
+              }
+            ]
+          }
         },
         "email": {
           "type": "sap.capire.incidents.EMailAddress"
@@ -1446,14 +1484,19 @@
           "type": "cds.LargeString"
         },
         "lastAttemptTimestamp": {
-          "@cds.on.update": {
-            "=": "$now"
-          },
           "type": "cds.Timestamp"
         },
         "status": {
           "type": "cds.String",
           "length": 23
+        },
+        "task": {
+          "type": "cds.String",
+          "length": 255
+        },
+        "appid": {
+          "type": "cds.String",
+          "length": 255
         }
       }
     },
@@ -1932,6 +1975,64 @@
         }
       }
     },
+    "sap.common.FlowHistory": {
+      "kind": "aspect",
+      "@cds.persistence.skip": "if-unused",
+      "elements": {
+        "transitions_": {
+          "@odata.draft.enabled": false,
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "targetAspect": {
+            "elements": {
+              "timestamp": {
+                "@cds.on.insert": {
+                  "=": "$now"
+                },
+                "@UI.HiddenFilter": true,
+                "@UI.ExcludeFromNavigationContext": true,
+                "@Core.Immutable": true,
+                "@title": "{i18n>CreatedAt}",
+                "@readonly": true,
+                "key": true,
+                "type": {
+                  "ref": [
+                    "managed",
+                    "createdAt"
+                  ]
+                }
+              },
+              "user": {
+                "@cds.on.insert": {
+                  "=": "$user"
+                },
+                "@UI.HiddenFilter": true,
+                "@UI.ExcludeFromNavigationContext": true,
+                "@Core.Immutable": true,
+                "@title": "{i18n>CreatedBy}",
+                "@readonly": true,
+                "@description": "{i18n>UserID.Description}",
+                "type": {
+                  "ref": [
+                    "managed",
+                    "createdBy"
+                  ]
+                },
+                "length": 255
+              },
+              "status": {
+                "type": "cds.String"
+              },
+              "comment": {
+                "type": "cds.String"
+              }
+            }
+          }
+        }
+      }
+    },
     "cuid": {
       "kind": "aspect",
       "elements": {
@@ -2173,151 +2274,6 @@
               "val": "L"
             }
           }
-        }
-      }
-    },
-    "sap.common.Languages.texts": {
-      "kind": "entity",
-      "@odata.draft.enabled": false,
-      "includes": [
-        "sap.common.TextsAspect"
-      ],
-      "elements": {
-        "locale": {
-          "@title": "{i18n>LanguageCode}",
-          "key": true,
-          "type": "sap.common.Locale",
-          "length": 14
-        },
-        "name": {
-          "@title": "{i18n>Name}",
-          "localized": null,
-          "type": "cds.String",
-          "length": 255
-        },
-        "descr": {
-          "@title": "{i18n>Description}",
-          "localized": null,
-          "type": "cds.String",
-          "length": 1000
-        },
-        "code": {
-          "@odata.containment.ignore": true,
-          "@Common.Text": {
-            "=": "name"
-          },
-          "@title": "{i18n>LanguageCode}",
-          "key": true,
-          "type": "sap.common.Locale",
-          "length": 14
-        }
-      }
-    },
-    "sap.common.Countries.texts": {
-      "kind": "entity",
-      "@odata.draft.enabled": false,
-      "includes": [
-        "sap.common.TextsAspect"
-      ],
-      "elements": {
-        "locale": {
-          "@title": "{i18n>LanguageCode}",
-          "key": true,
-          "type": "sap.common.Locale",
-          "length": 14
-        },
-        "name": {
-          "@title": "{i18n>Name}",
-          "localized": null,
-          "type": "cds.String",
-          "length": 255
-        },
-        "descr": {
-          "@title": "{i18n>Description}",
-          "localized": null,
-          "type": "cds.String",
-          "length": 1000
-        },
-        "code": {
-          "@odata.containment.ignore": true,
-          "@title": "{i18n>CountryCode}",
-          "@Common.Text": {
-            "=": "name"
-          },
-          "key": true,
-          "type": "cds.String",
-          "length": 3
-        }
-      }
-    },
-    "sap.common.Currencies.texts": {
-      "kind": "entity",
-      "@odata.draft.enabled": false,
-      "includes": [
-        "sap.common.TextsAspect"
-      ],
-      "elements": {
-        "locale": {
-          "@title": "{i18n>LanguageCode}",
-          "key": true,
-          "type": "sap.common.Locale",
-          "length": 14
-        },
-        "name": {
-          "@title": "{i18n>Name}",
-          "localized": null,
-          "type": "cds.String",
-          "length": 255
-        },
-        "descr": {
-          "@title": "{i18n>Description}",
-          "localized": null,
-          "type": "cds.String",
-          "length": 1000
-        },
-        "code": {
-          "@odata.containment.ignore": true,
-          "@title": "{i18n>CurrencyCode}",
-          "@Common.Text": {
-            "=": "name"
-          },
-          "key": true,
-          "type": "cds.String",
-          "length": 3
-        }
-      }
-    },
-    "sap.common.Timezones.texts": {
-      "kind": "entity",
-      "@odata.draft.enabled": false,
-      "includes": [
-        "sap.common.TextsAspect"
-      ],
-      "elements": {
-        "locale": {
-          "@title": "{i18n>LanguageCode}",
-          "key": true,
-          "type": "sap.common.Locale",
-          "length": 14
-        },
-        "name": {
-          "@title": "{i18n>Name}",
-          "localized": null,
-          "type": "cds.String",
-          "length": 255
-        },
-        "descr": {
-          "@title": "{i18n>Description}",
-          "localized": null,
-          "type": "cds.String",
-          "length": 1000
-        },
-        "code": {
-          "@odata.containment.ignore": true,
-          "@title": "{i18n>TimeZoneCode}",
-          "key": true,
-          "type": "cds.String",
-          "length": 100
         }
       }
     },
@@ -3112,6 +3068,151 @@
         }
       }
     },
+    "sap.common.Languages.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@Common.Text": {
+            "=": "name"
+          },
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        }
+      }
+    },
+    "sap.common.Countries.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CountryCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "sap.common.Currencies.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CurrencyCode}",
+          "@Common.Text": {
+            "=": "name"
+          },
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "sap.common.Timezones.texts": {
+      "kind": "entity",
+      "@odata.draft.enabled": false,
+      "includes": [
+        "sap.common.TextsAspect"
+      ],
+      "elements": {
+        "locale": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "sap.common.Locale",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": null,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>TimeZoneCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 100
+        }
+      }
+    },
     "ProcessorService.Urgency.texts": {
       "kind": "entity",
       "@cds.autoexposed": true,
@@ -3324,7 +3425,9 @@
     }
   },
   "meta": {
-    "creator": "CDS Compiler v6.2.2",
+    "creator": "CDS Compiler v6.9.6",
+    "compilerVersion": "6.9.6",
+    "compilerCsnFlavor": "inferred",
     "flavor": "inferred"
   },
   "$version": "2.0"

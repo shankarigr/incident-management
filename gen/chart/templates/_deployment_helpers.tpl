@@ -23,7 +23,7 @@ copied from web-application: web-application.fullname
 */}}
 {{- define "cap.deploymentHost" -}}
 {{- if .deployment.expose.host }}
-{{- .deployment.expose.host }}
+{{- tpl .deployment.expose.host . }}
 {{- else }}
 {{- $name := (include "cap.web-application.fullname" .) }}
 {{- if hasPrefix $name .Release.Namespace }}

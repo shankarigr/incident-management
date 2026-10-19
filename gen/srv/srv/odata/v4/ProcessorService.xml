@@ -86,6 +86,7 @@
         <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
         <NavigationProperty Name="DraftAdministrativeData" Type="ProcessorService.DraftAdministrativeData" ContainsTarget="true"/>
         <NavigationProperty Name="SiblingEntity" Type="ProcessorService.Incidents"/>
+        <Property Name="DraftMessages" Type="Collection(ProcessorService.DRAFT_DraftAdministrativeData_DraftMessage)" Nullable="true"/>
       </EntityType>
       <EntityType Name="Customers">
         <Key>
@@ -185,6 +186,7 @@
         <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
         <NavigationProperty Name="DraftAdministrativeData" Type="ProcessorService.DraftAdministrativeData" ContainsTarget="true"/>
         <NavigationProperty Name="SiblingEntity" Type="ProcessorService.Incidents_conversation"/>
+        <Property Name="DraftMessages" Type="Collection(ProcessorService.DRAFT_DraftAdministrativeData_DraftMessage)" Nullable="true"/>
       </EntityType>
       <EntityType Name="Urgency_texts">
         <Key>
@@ -206,6 +208,15 @@
         <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
         <Property Name="code" Type="Edm.String" Nullable="false"/>
       </EntityType>
+      <ComplexType Name="DRAFT_DraftAdministrativeData_DraftMessage">
+        <Property Name="code" Type="Edm.String"/>
+        <Property Name="message" Type="Edm.String"/>
+        <Property Name="target" Type="Edm.String"/>
+        <Property Name="additionalTargets" Type="Collection(Edm.String)" Nullable="true"/>
+        <Property Name="transition" Type="Edm.Boolean"/>
+        <Property Name="numericSeverity" Type="Edm.Byte"/>
+        <Property Name="longtextUrl" Type="Edm.String"/>
+      </ComplexType>
       <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
         <Parameter Name="in" Type="ProcessorService.Incidents"/>
         <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
@@ -225,6 +236,9 @@
         <Parameter Name="PreserveChanges" Type="Edm.Boolean"/>
         <ReturnType Type="ProcessorService.Incidents"/>
       </Action>
+      <Annotations Target="ProcessorService.EntityContainer">
+        <Annotation Term="Common.AddressViaNavigationPath" Bool="true"/>
+      </Annotations>
       <Annotations Target="ProcessorService.Incidents">
         <Annotation Term="UI.FieldGroup" Qualifier="GeneratedGroup">
           <Record Type="UI.FieldGroupType">
@@ -331,6 +345,21 @@
             <PropertyPath>ID</PropertyPath>
           </Collection>
         </Annotation>
+        <Annotation Term="Common.SideEffects" Qualifier="alwaysFetchMessages">
+          <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceEntities">
+              <Collection>
+                <NavigationPropertyPath></NavigationPropertyPath>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+              <Collection>
+                <String>DraftMessages</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Messages" Path="DraftMessages"/>
       </Annotations>
       <Annotations Target="ProcessorService.EntityContainer/Incidents">
         <Annotation Term="Common.DraftRoot">
@@ -338,6 +367,20 @@
             <PropertyValue Property="ActivationAction" String="ProcessorService.draftActivate"/>
             <PropertyValue Property="EditAction" String="ProcessorService.draftEdit"/>
             <PropertyValue Property="PreparationAction" String="ProcessorService.draftPrepare"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.SideEffects" Qualifier="alwaysFetchMessages">
+          <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceEntities">
+              <Collection>
+                <NavigationPropertyPath></NavigationPropertyPath>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+              <Collection>
+                <String>DraftMessages</String>
+              </Collection>
+            </PropertyValue>
           </Record>
         </Annotation>
       </Annotations>
@@ -469,6 +512,9 @@
       </Annotations>
       <Annotations Target="ProcessorService.Incidents/DraftAdministrativeData">
         <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="ProcessorService.Incidents/DraftMessages">
+        <Annotation Term="Core.Computed" Bool="true"/>
       </Annotations>
       <Annotations Target="ProcessorService.EntityContainer/Customers">
         <Annotation Term="Capabilities.DeleteRestrictions">
@@ -684,11 +730,40 @@
             </Record>
           </Collection>
         </Annotation>
+        <Annotation Term="Common.SideEffects" Qualifier="alwaysFetchMessages">
+          <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceEntities">
+              <Collection>
+                <NavigationPropertyPath></NavigationPropertyPath>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+              <Collection>
+                <String>DraftMessages</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Messages" Path="DraftMessages"/>
       </Annotations>
       <Annotations Target="ProcessorService.EntityContainer/Incidents_conversation">
         <Annotation Term="Common.DraftNode">
           <Record Type="Common.DraftNodeType">
             <PropertyValue Property="PreparationAction" String="ProcessorService.draftPrepare"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.SideEffects" Qualifier="alwaysFetchMessages">
+          <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceEntities">
+              <Collection>
+                <NavigationPropertyPath></NavigationPropertyPath>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+              <Collection>
+                <String>DraftMessages</String>
+              </Collection>
+            </PropertyValue>
           </Record>
         </Annotation>
       </Annotations>
@@ -721,6 +796,9 @@
       </Annotations>
       <Annotations Target="ProcessorService.Incidents_conversation/DraftAdministrativeData">
         <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="ProcessorService.Incidents_conversation/DraftMessages">
+        <Annotation Term="Core.Computed" Bool="true"/>
       </Annotations>
       <Annotations Target="ProcessorService.Urgency_texts/locale">
         <Annotation Term="Common.Label" String="{i18n>LanguageCode}"/>

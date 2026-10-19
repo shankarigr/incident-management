@@ -8,5 +8,7 @@ COLUMN TABLE cds_outbox_Messages (
   lastError NCLOB,
   lastAttemptTimestamp TIMESTAMP,
   status NVARCHAR(23),
+  task NVARCHAR(255),
+  appid NVARCHAR(255),
   PRIMARY KEY(ID)
 )
