@@ -1,11 +1,11 @@
 # yaml-language-server: $schema=./values.schema.json
 
 global:
-  domain: c-146b042.kyma.ondemand.com
+  domain: a1cb928.kyma.ondemand.com
   imagePullSecret:
     name: docker-registry
   image:
-    registry: gopalanand230
+    registry: shankarigr
     tag: latest
 srv:
   bindings:
