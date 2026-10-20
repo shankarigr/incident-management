@@ -14,6 +14,7 @@ modules:
       buildpack:
         type: nodejs
         builder: builder-jammy-base
+        runImage: paketobuildpacks/run-jammy-base
         path: gen/srv
         env:
           BP_NODE_RUN_SCRIPTS: ""
@@ -22,6 +23,7 @@ modules:
       buildpack:
         type: nodejs
         builder: builder-jammy-base
+        runImage: paketobuildpacks/run-jammy-base
         path: gen/db
         env:
           BP_NODE_RUN_SCRIPTS: ""
@@ -30,6 +32,7 @@ modules:
       buildpack:
         type: nodejs
         builder: builder-jammy-base
+        runImage: paketobuildpacks/run-jammy-base
         path: app/html5-deployer
         env:
           BP_NODE_RUN_SCRIPTS: ""
