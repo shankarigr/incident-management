@@ -3425,8 +3425,8 @@
     }
   },
   "meta": {
-    "creator": "CDS Compiler v6.9.6",
-    "compilerVersion": "6.9.6",
+    "creator": "CDS Compiler v6.9.0",
+    "compilerVersion": "6.9.0",
     "compilerCsnFlavor": "inferred",
     "flavor": "inferred"
   },
